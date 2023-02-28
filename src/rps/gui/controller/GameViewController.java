@@ -41,6 +41,7 @@ public class GameViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         labelRoundNumber.setText("Round " + roundNumber);
+        imagePlayerMove.setScaleX(-1);
         startGame();
     }
 
@@ -87,7 +88,6 @@ public class GameViewController implements Initializable {
             imagePlayerMove.setImage(getMove(loserMove));
             imageBotMove.setImage(getMove(winnerMove));
         }
-        imagePlayerMove.setScaleX(-1);
 
         ge.getGameState().setRoundNumber(roundNumber++);
         labelRoundNumber.setText("Round " + roundNumber);
