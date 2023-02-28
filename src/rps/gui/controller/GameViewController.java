@@ -1,12 +1,19 @@
 package rps.gui.controller;
 
 // Java imports
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import rps.bll.game.GameManager;
 import rps.bll.game.Move;
 import rps.bll.game.Result;
@@ -15,10 +22,11 @@ import rps.bll.player.IPlayer;
 import rps.bll.player.Player;
 import rps.bll.player.PlayerType;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 /**
  *
@@ -27,10 +35,11 @@ import java.util.Scanner;
 public class GameViewController implements Initializable {
 
     @FXML
-    private Label labelPlayer1Name, labelPlayer2Name, labelPlayer1Score, labelPlayer2Score, labelRoundNumber, labelTieScore, labelPlayer1Move, labelPlayer2Move;
+    private Label labelPlayer1Name, labelPlayer2Name, labelPlayer1Score, labelPlayer2Score, labelRoundNumber, labelTieScore, labelRoundResult;
     @FXML
-    private ImageView imagePlayerMove, imageBotMove;
+    private ImageView imagePlayerMove, imageBotMove, imageRock, imagePaper, imageScissors;
     private GameManager ge;
+    private String playerName;
     private int roundNumber = 1;
     private int scorePlayer1, scorePlayer2, scoreTie;
 
@@ -43,7 +52,9 @@ public class GameViewController implements Initializable {
         // TODO
         labelRoundNumber.setText("Round " + roundNumber);
         imagePlayerMove.setScaleX(-1);
-        startGame();
+        imageRock.setImage(new Image("r.png"));
+        imagePaper.setImage(new Image("p.png"));
+        imageScissors.setImage(new Image("s.png"));
     }
 
     public void handleRock(ActionEvent actionEvent) {
@@ -92,6 +103,8 @@ public class GameViewController implements Initializable {
 
         ge.getGameState().setRoundNumber(roundNumber++);
         labelRoundNumber.setText("Round " + roundNumber);
+        labelRoundResult.setText(result.getWinnerPlayer().getPlayerName() + "'s " + winnerMove + " " + result.getType().name() + " vs "
+                + result.getLoserPlayer().getPlayerName() + "'s " + loserMove );
     }
 
     private Image getMove(Move move) {
@@ -113,7 +126,7 @@ public class GameViewController implements Initializable {
      * Starts the game
      */
     public void startGame() {
-        IPlayer human = new Player("playerName", PlayerType.Human);
+        IPlayer human = new Player(playerName, PlayerType.Human);
         IPlayer bot = new Player(getRandomBotName(), PlayerType.AI);
 
         labelPlayer1Name.setText(human.getPlayerName());
@@ -139,5 +152,31 @@ public class GameViewController implements Initializable {
         };
         int randomNumber = new Random().nextInt(botNames.length - 1);
         return botNames[randomNumber];
+    }
+
+    public void setName(String name) {
+        labelPlayer1Name.setText(name);
+        playerName = name;
+        startGame();
+    }
+
+    public void handleResetGame(ActionEvent actionEvent) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Are you sure you want to reset?");
+        alert.setContentText("Resetting will restart the entire game");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.get() == ButtonType.OK) {
+            Stage s = (Stage) labelRoundNumber.getScene().getWindow();
+            s.close();
+
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/rps/gui/view/NameInput.fxml"));
+            Parent root = loader.load();
+            stage.setTitle("Welcome to the not-implemented Rock-Paper-Scissor game!");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
     }
 }

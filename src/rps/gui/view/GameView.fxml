@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rps.gui.controller.GameViewController">
    <children>
-      <VBox layoutX="211.0" prefHeight="153.0" prefWidth="200.0">
+      <VBox layoutX="224.0" prefHeight="90.0" prefWidth="200.0">
          <children>
             <Label fx:id="labelRoundNumber" alignment="CENTER" contentDisplay="CENTER" prefHeight="58.0" prefWidth="200.0" text="Round " textAlignment="CENTER" wrapText="true">
                <font>
@@ -26,7 +26,7 @@
             </Label>
          </children>
       </VBox>
-      <VBox layoutY="100.0" prefHeight="200.0" prefWidth="150.0">
+      <VBox layoutY="58.0" prefHeight="200.0" prefWidth="150.0">
          <children>
             <Label fx:id="labelPlayer1Name" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true">
                <font>
@@ -40,14 +40,27 @@
             </Label>
          </children>
       </VBox>
-      <HBox layoutX="211.0" layoutY="129.0" prefHeight="100.0" prefWidth="200.0">
+      <HBox layoutX="174.0" layoutY="92.0" prefHeight="150.0" prefWidth="300.0">
          <children>
-            <ImageView fx:id="imagePlayerMove" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
-            <Separator prefWidth="50.0" visible="false" />
-            <ImageView fx:id="imageBotMove" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imagePlayerMove" fitHeight="125.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <Separator prefWidth="50.0" visible="false">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </Separator>
+            <ImageView fx:id="imageBotMove" fitHeight="125.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
          </children>
       </HBox>
-      <VBox layoutX="422.0" layoutY="100.0" prefHeight="200.0" prefWidth="150.0">
+      <Label fx:id="labelRoundResult" alignment="CENTER" contentDisplay="CENTER" layoutX="113.0" layoutY="248.0" prefHeight="48.0" prefWidth="397.0" textAlignment="CENTER" />
+      <VBox layoutX="422.0" layoutY="58.0" prefHeight="200.0" prefWidth="150.0">
          <children>
             <Label fx:id="labelPlayer2Name" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true">
                <font>
@@ -61,9 +74,9 @@
             </Label>
          </children>
       </VBox>
-      <HBox layoutX="93.0" layoutY="296.0" prefHeight="90.0" prefWidth="415.0">
+      <HBox layoutX="104.0" layoutY="296.0" prefHeight="90.0" prefWidth="415.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleRock" prefHeight="70.0" prefWidth="125.0" text="Rock">
+            <Button mnemonicParsing="false" onAction="#handleRock" prefHeight="70.0" prefWidth="125.0" style="-fx-background-radius: 50;" text="Rock" wrapText="true">
                <graphic>
                   <ImageView fx:id="imageRock" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
@@ -71,7 +84,7 @@
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handlePaper" prefHeight="70.0" prefWidth="125.0" text="Paper">
+            <Button mnemonicParsing="false" onAction="#handlePaper" prefHeight="70.0" prefWidth="125.0" style="-fx-background-radius: 50;" text="Paper">
                <graphic>
                   <ImageView fx:id="imagePaper" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
@@ -79,7 +92,7 @@
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleScissors" prefHeight="70.0" prefWidth="125.0" text="Scissors">
+            <Button mnemonicParsing="false" onAction="#handleScissors" prefHeight="70.0" prefWidth="125.0" style="-fx-background-radius: 50;" text="Scissors">
                <graphic>
                   <ImageView fx:id="imageScissors" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
@@ -89,5 +102,6 @@
             </Button>
          </children>
       </HBox>
+      <Button layoutX="563.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleResetGame" text="Reset" />
    </children>
 </AnchorPane>

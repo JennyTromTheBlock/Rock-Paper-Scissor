@@ -1,6 +1,7 @@
 package rps.gui.controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,7 +24,10 @@ public class NameInput {
             s.close();
 
             Stage stage = new Stage();
-            Parent root = FXMLLoader.load(getClass().getResource("/rps/gui/view/GameView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/rps/gui/view/GameView.fxml"));
+            Parent root = loader.load();
+            GameViewController controller = loader.getController();
+            controller.setName(nameInputField.getText());
             stage.setTitle("Welcome to the not-implemented Rock-Paper-Scissor game!");
             stage.setScene(new Scene(root));
             stage.show();
