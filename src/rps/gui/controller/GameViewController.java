@@ -39,6 +39,7 @@ public class GameViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         // TODO
         labelRoundNumber.setText("Round " + roundNumber);
         imagePlayerMove.setScaleX(-1);
