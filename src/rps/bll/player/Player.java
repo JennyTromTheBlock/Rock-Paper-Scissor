@@ -6,7 +6,7 @@ import rps.bll.game.Move;
 import rps.bll.game.Result;
 
 //Java imports
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Example implementation of a player.
@@ -49,7 +49,59 @@ public class Player implements IPlayer {
         //Historic data to analyze and decide next move...
         ArrayList<Result> results = (ArrayList<Result>) state.getHistoricResults();
 
-        //Implement better AI here...
-        return Move.Rock;
+        if (results.size() >= 5) {
+            Map<Move, Move> playerMoves = convertResultHistory(results);
+
+            Random random = new Random();
+            int randomIndex = random.nextInt(playerMoves.size());
+
+            Move counter = playerMoves.get(playerMoves.keySet().toArray()[randomIndex]);
+            //Implement better AI here...
+            return counter;
+        }
+
+        return randomMove();
+    }
+
+    private Move randomMove() {
+        Random random = new Random();
+        int randomMove = random.nextInt(3) + 1;
+        Move move;
+
+        if (randomMove == 1) {
+            move = Move.Rock;
+        }
+        else if (randomMove == 2) {
+            move = Move.Paper;
+        }
+        else move = Move.Scissor;
+
+        return move;
+    }
+
+    private Map<Move, Move> convertResultHistory(List<Result> results) {
+        Map<Move, Move> counters = new HashMap<>();
+
+        for (Result result : results) {
+            Move playerMove;
+            Move counter;
+            PlayerType winner = result.getWinnerPlayer().getPlayerType();
+
+            playerMove = winner == PlayerType.Human ? result.getWinnerMove() : result.getLoserMove();
+
+            if (playerMove == Move.Rock) {
+                counter = Move.Paper;
+            }
+            else if (playerMove == Move.Paper) {
+                counter = Move.Scissor;
+            }
+            else {
+                counter = Move.Rock;
+            }
+
+            counters.put(playerMove, counter);
+        }
+
+        return counters;
     }
 }
