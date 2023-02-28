@@ -49,6 +49,12 @@ public class Player implements IPlayer {
         //Historic data to analyze and decide next move...
         ArrayList<Result> results = (ArrayList<Result>) state.getHistoricResults();
 
+        //todo make list of all player moves done
+
+        //todo get random number form list size
+
+        //todo
+
         //Implement better AI here...
         return Move.Rock;
     }
