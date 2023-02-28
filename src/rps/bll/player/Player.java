@@ -54,54 +54,36 @@ public class Player implements IPlayer {
 
             Random random = new Random();
             int randomIndex = random.nextInt(playerMoves.size());
+            Move randomKey = (Move) playerMoves.keySet().toArray()[randomIndex];
 
-            Move counter = playerMoves.get(playerMoves.keySet().toArray()[randomIndex]);
+            return playerMoves.get(randomKey);
             //Implement better AI here...
-            return counter;
         }
 
         return randomMove();
     }
 
     private Move randomMove() {
+        Move[] moves = Move.values();
         Random random = new Random();
-        int randomMove = random.nextInt(3) + 1;
-        Move move;
+        int randomMove = random.nextInt(moves.length);
 
-        if (randomMove == 1) {
-            move = Move.Rock;
-        }
-        else if (randomMove == 2) {
-            move = Move.Paper;
-        }
-        else move = Move.Scissor;
-
-        return move;
+        return moves[randomMove];
     }
 
     private Map<Move, Move> convertResultHistory(List<Result> results) {
-        Map<Move, Move> counters = new HashMap<>();
+        Map<Move, Move> movesAndCounters = new HashMap<>();
 
         for (Result result : results) {
             Move playerMove;
             Move counter;
             PlayerType winner = result.getWinnerPlayer().getPlayerType();
 
-            playerMove = winner == PlayerType.Human ? result.getWinnerMove() : result.getLoserMove();
+            playerMove = (winner == PlayerType.Human) ? result.getWinnerMove() : result.getLoserMove();
 
-            if (playerMove == Move.Rock) {
-                counter = Move.Paper;
-            }
-            else if (playerMove == Move.Paper) {
-                counter = Move.Scissor;
-            }
-            else {
-                counter = Move.Rock;
-            }
-
-            counters.put(playerMove, counter);
+            movesAndCounters.put(playerMove, Move.getCounter(playerMove));
         }
 
-        return counters;
+        return movesAndCounters;
     }
 }

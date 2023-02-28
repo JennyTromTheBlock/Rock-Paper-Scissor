@@ -24,9 +24,7 @@ import rps.bll.player.PlayerType;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  *
@@ -48,8 +46,6 @@ public class GameViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        // TODO
         labelRoundNumber.setText("Round " + roundNumber);
         imagePlayerMove.setScaleX(-1);
         imageRock.setImage(new Image("r.png"));
@@ -76,29 +72,22 @@ public class GameViewController implements Initializable {
      * Helper method to count up round no. & scores after each round
      */
     private void endRound() {
-        Result result = (Result) ge.getGameState().getHistoricResults().toArray()[ge.getGameState().getHistoricResults().size()-1];
+        List<Result> results = new ArrayList<>(ge.getGameState().getHistoricResults());
+        Result result = results.get(results.size() - 1);
+
         PlayerType winner = result.getWinnerPlayer().getPlayerType();
         ResultType type = result.getType();
         Move winnerMove = result.getWinnerMove();
         Move loserMove = result.getLoserMove();
 
         if (type == ResultType.Tie) {
-            scoreTie++;
-            labelTieScore.setText("Ties " + scoreTie);
-            imagePlayerMove.setImage(getMove(winnerMove));
-            imageBotMove.setImage(getMove(winnerMove));
+            handleTie(winnerMove);
         }
         else if (winner == PlayerType.Human) {
-            scorePlayer1++;
-            labelPlayer1Score.setText(String.valueOf(scorePlayer1));
-            imagePlayerMove.setImage(getMove(winnerMove));
-            imageBotMove.setImage(getMove(loserMove));
+            handlePlayerWin(winnerMove, loserMove);
 
         } else {
-            scorePlayer2++;
-            labelPlayer2Score.setText(String.valueOf(scorePlayer2));
-            imagePlayerMove.setImage(getMove(loserMove));
-            imageBotMove.setImage(getMove(winnerMove));
+            handleBotWin(loserMove, winnerMove);
         }
 
         ge.getGameState().setRoundNumber(roundNumber++);
@@ -107,19 +96,42 @@ public class GameViewController implements Initializable {
                 + result.getLoserPlayer().getPlayerName() + "'s " + loserMove );
     }
 
+    private void updatePlayerImages(Move playerMove, Move botMove) {
+        Image playerMoveImage = getMove(playerMove);
+        Image botMoveImage = getMove(botMove);
+        imagePlayerMove.setImage(playerMoveImage);
+        imageBotMove.setImage(botMoveImage);
+    }
+
+    private void updatePlayerImages(Move tieMove) {
+        Image moveImage = getMove(tieMove);
+        imagePlayerMove.setImage(moveImage);
+        imageBotMove.setImage(moveImage);
+    }
+
+    private void handleTie(Move move) {
+        scoreTie++;
+        labelTieScore.setText("Ties " + scoreTie);
+
+        updatePlayerImages(move);
+    }
+
+    private void handlePlayerWin(Move playerMove, Move botMove) {
+        scorePlayer1++;
+        labelPlayer1Score.setText(String.valueOf(scorePlayer1));
+
+        updatePlayerImages(playerMove, botMove);
+    }
+
+    private void handleBotWin(Move playerMove, Move botMove) {
+        scorePlayer2++;
+        labelPlayer2Score.setText(String.valueOf(scorePlayer2));
+
+        updatePlayerImages(playerMove, botMove);
+    }
+
     private Image getMove(Move move) {
-        String imagePath = "";
-        if (move == Move.Paper) {
-            imagePath = "p.png";
-        }
-        if (move == Move.Rock) {
-            imagePath = "r.png";
-        }
-        if (move == Move.Scissor) {
-            imagePath = "s.png";
-        }
-        Image image = new Image(imagePath);
-        return image;
+        return new Image(Move.getMoveImagePath(move));
     }
 
     /**
