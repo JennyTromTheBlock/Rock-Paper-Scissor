@@ -18,6 +18,7 @@ public class JavaFXApp extends Application {
         Application.launch();
     }
 
+    
     @Override
     public void start(Stage stage) throws Exception {
 
