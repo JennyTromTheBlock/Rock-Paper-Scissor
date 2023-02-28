@@ -36,6 +36,7 @@ public class GameViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         // TODO
         labelRoundNumber.setText("Round " + roundNumber);
         startGame();
