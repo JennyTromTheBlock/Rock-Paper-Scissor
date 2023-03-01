@@ -2,6 +2,9 @@ package rps.gui.controller;
 
 // Java imports
 
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +16,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import rps.bll.game.GameManager;
 import rps.bll.game.Move;
 import rps.bll.game.Result;
@@ -51,7 +56,36 @@ public class GameViewController implements Initializable {
         imageRock.setImage(new Image("r.png"));
         imagePaper.setImage(new Image("p.png"));
         imageScissors.setImage(new Image("s.png"));
+        moveAnimations();
     }
+
+    public void moveAnimations() {
+
+        TranslateTransition translate = new TranslateTransition();
+
+        translate.setNode(imagePlayerMove);
+        translate.setNode(imageBotMove);
+        translate.setDuration(Duration.millis(400));
+        translate.setCycleCount(TranslateTransition.INDEFINITE);
+        translate.setByX(2);
+        translate.setByY(5);
+        translate.setAutoReverse(true);
+        translate.play();
+
+
+        RotateTransition rotate = new RotateTransition();
+
+        rotate.setNode(imagePlayerMove);
+        //rotate.setNode(imageBotMove);
+        rotate.setDuration(Duration.millis(400));
+        rotate.setCycleCount(TranslateTransition.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.setByAngle(10);
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setAutoReverse(true);
+        rotate.play();
+    }
+
 
     public void handleRock(ActionEvent actionEvent) {
         ge.playRound(Move.valueOf("Rock"));
