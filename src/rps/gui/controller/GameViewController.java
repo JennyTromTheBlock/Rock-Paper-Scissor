@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -16,6 +18,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,11 +42,14 @@ import java.util.*;
  * @author smsj
  */
 public class GameViewController implements Initializable {
-
+    @FXML
+    private FlowPane flowPaneHistory;
+    @FXML
+    private Label labelRockCountHuman, labelRockCountBot, labelPaperCountHuman, labelPaperCountBot, labelScissorsCountHuman, labelScissorsCountBot;
     @FXML
     private Label labelPlayer1Name, labelPlayer2Name, labelPlayer1Score, labelPlayer2Score, labelRoundNumber, labelTieScore, labelRoundResult;
     @FXML
-    private ImageView imagePlayerMove, imageBotMove, imageRock, imagePaper, imageScissors;
+    private ImageView imagePlayerMove, imageBotMove, imageRock, imagePaper, imageScissors, imageStatsRockHuman, imageStatsPaperHuman, imageStatsScissorsHuman, imageStatsRockBot, imageStatsPaperBot, imageStatsScissorsBot;
     private GameManager ge;
     private String playerName;
     private int roundNumber = 1;
@@ -56,6 +65,12 @@ public class GameViewController implements Initializable {
         imageRock.setImage(new Image("r.png"));
         imagePaper.setImage(new Image("p.png"));
         imageScissors.setImage(new Image("s.png"));
+        imageStatsRockHuman.setImage(new Image("r.png"));
+        imageStatsPaperHuman.setImage(new Image("p.png"));
+        imageStatsScissorsHuman.setImage(new Image(("s.png")));
+        imageStatsRockBot.setImage(new Image("r.png"));
+        imageStatsPaperBot.setImage(new Image("p.png"));
+        imageStatsScissorsBot.setImage(new Image(("s.png")));
         moveAnimations();
     }
 
@@ -128,6 +143,9 @@ public class GameViewController implements Initializable {
         labelRoundNumber.setText("Round " + roundNumber);
         labelRoundResult.setText(result.getWinnerPlayer().getPlayerName() + "'s " + winnerMove + " " + result.getType().name() + " vs "
                 + result.getLoserPlayer().getPlayerName() + "'s " + loserMove );
+
+        updateStats(result);
+        addToHistory();
     }
 
     private void updatePlayerImages(Move playerMove, Move botMove) {
@@ -224,5 +242,84 @@ public class GameViewController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
         }
+    }
+
+    private void updateStats(Result roundResult) {
+        int rockCountHuman = 0;
+        int paperCountHuman = 0;
+        int scissorsCountHuman = 0;
+        int rockCountBot = 0;
+        int paperCountBot = 0;
+        int scissorsCountBot = 0;
+        int total = 0;
+        for(Result result : ge.getGameState().getHistoricResults()) {
+            total++;
+            if (result.getWinnerPlayer().getPlayerType() == PlayerType.Human && result.getType() == ResultType.Win) {
+                if (result.getWinnerMove() == Move.Rock) {
+                    rockCountHuman++;
+                    scissorsCountBot++;
+                } else if (result.getWinnerMove() == Move.Paper) {
+                    paperCountHuman++;
+                    rockCountBot++;
+                } else {
+                    scissorsCountHuman++;
+                    paperCountBot++;
+                }
+            } else if (result.getWinnerPlayer().getPlayerType() == PlayerType.Human && result.getType() == ResultType.Tie) {
+                if (result.getWinnerMove() == Move.Rock) {
+                    rockCountHuman++;
+                    rockCountBot++;
+                } else if (result.getWinnerMove() == Move.Paper) {
+                    paperCountHuman++;
+                    paperCountBot++;
+                } else {
+                    scissorsCountHuman++;
+                    scissorsCountBot++;
+                }
+            } else {
+                if (result.getWinnerMove() == Move.Rock) {
+                    rockCountBot++;
+                    paperCountHuman++;
+                } else if (result.getWinnerMove() == Move.Paper) {
+                    paperCountBot++;
+                    rockCountHuman++;
+                } else {
+                    scissorsCountBot++;
+                    paperCountHuman++;
+                }
+            }
+        }
+
+        labelRockCountHuman.setText(Math.round(rockCountHuman*100/total) + "%");
+        labelPaperCountHuman.setText(Math.round(paperCountHuman*100/total) + "%");
+        labelScissorsCountHuman.setText(Math.round(scissorsCountHuman*100/total) + "%");
+        labelRockCountBot.setText(Math.round(rockCountBot*100/total) + "%");
+        labelPaperCountBot.setText(Math.round(paperCountBot*100/total) + "%");
+        labelScissorsCountBot.setText(Math.round(scissorsCountBot*100/total) + "%");
+    }
+
+    private void addToHistory() {
+        GridPane history = new GridPane();
+        history.add(new Label("Round "), 0, 0);
+        history.add(new Label(String.valueOf(roundNumber-1)), 1, 0);
+
+        ImageView imagePlayerMoveHistory = new ImageView(new Image(imagePlayerMove.getImage().getUrl()));
+        imagePlayerMoveHistory.setFitWidth(30);
+        imagePlayerMoveHistory.setFitHeight(30);
+        ImageView imageBotMoveHistory = new ImageView(new Image(imageBotMove.getImage().getUrl()));
+        imageBotMoveHistory.setFitWidth(30);
+        imageBotMoveHistory.setFitHeight(30);
+
+        history.add(imagePlayerMoveHistory,0,1);
+        history.add(imageBotMoveHistory,1,1);
+
+        history.setPadding(new Insets(5, 5, 5, 5));
+        history.setBorder(Border.stroke(Color.GREY));
+        history.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+
+        flowPaneHistory.getChildren().add(history);
+        flowPaneHistory.setPrefWrapLength(Double.MAX_VALUE);
+        flowPaneHistory.setPrefHeight(70);
+
     }
 }
