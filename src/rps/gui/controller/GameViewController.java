@@ -5,6 +5,7 @@ package rps.gui.controller;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
@@ -42,6 +44,8 @@ import java.util.*;
  * @author smsj
  */
 public class GameViewController implements Initializable {
+    @FXML
+    private ScrollPane scrollPane;
     @FXML
     private FlowPane flowPaneHistory;
     @FXML
@@ -318,8 +322,7 @@ public class GameViewController implements Initializable {
         history.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
 
         flowPaneHistory.getChildren().add(history);
-        flowPaneHistory.setPrefWrapLength(Double.MAX_VALUE);
-        flowPaneHistory.setPrefHeight(70);
+        Platform.runLater(() -> scrollPane.setVvalue(1));
 
     }
 }
